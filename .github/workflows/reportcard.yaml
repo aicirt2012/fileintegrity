@@ -1,0 +1,28 @@
+name: Reportcard
+on: [push]
+jobs:
+  reportcard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: integrity
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: integrity/go.mod
+      - name: Checkout Repocard
+        uses: actions/checkout@v4
+        with: 
+          repository: gojp/goreportcard
+          path: goreportcard
+      - name: Setup Reportcard
+        run: |- 
+          cd goreportcard
+          make install
+          go install ./cmd/goreportcard-cli
+      - name: Execute Reportcard
+        run: |-
+          cd integrity 
+          goreportcard-cli -v -t 100

@@ -1,0 +1,67 @@
+name: Release
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  release:
+    name: Release
+    permissions: 
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: go.mod
+
+    - name: Install go-licenses
+      run: go env && go install github.com/google/go-licenses@latest && ls
+    - name: Generate License File
+      run: | 
+        rm doc/license/license.txt
+        go-licenses report . --template doc/license/license.txt.tpl > doc/license/license.txt
+        go-licenses report . --template doc/license/license.md.tpl > doc/license/license.md
+    
+    - name: Set Build Variables
+      run: |
+        version=${{ github.ref_name }}
+        version=${version:1}
+        echo asset=fileintegrity-${{ github.ref_name }} >> $GITHUB_ENV
+        echo ldflags="-s -w -X 'github.com/aicirt2012/fileintegrity.Version=$version'" >> $GITHUB_ENV
+      
+    - name: Unit- and Integration-Tests
+      run: go test -tags release -ldflags "$ldflags" -exec sudo ./...
+
+    - name: Build
+      run: |
+        mkdir ./$asset
+        env GOARCH=amd64 go build -ldflags "$ldflags" -o ./$asset/linux/fileintegrity ./src/cli/main.go 
+        env GOOS=windows GOARCH=amd64 go build -ldflags "$ldflags" -o ./$asset/windows/fileintegrity.exe ./src/cli/main.go
+        env GOOS=darwin GOARCH=amd64 go build -ldflags "$ldflags" -o ./$asset/macos/fileintegrity ./src/cli/main.go
+        cp doc/license/license.md $asset/license.md
+        zip -r ${asset}.zip $asset
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload Asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        asset: ${{ env.asset }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_name: ${{ env.asset }}.zip
+        asset_path: ./${{ env.asset }}.zip
+        asset_content_type: application/zip
