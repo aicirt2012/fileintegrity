@@ -1,6 +1,7 @@
 ![Release](https://github.com/aicirt2012/fileintegrity/actions/workflows/release.yaml/badge.svg)
 ![Build](https://github.com/aicirt2012/fileintegrity/actions/workflows/build.yaml/badge.svg)
-![Local reportcard](https://github.com/aicirt2012/fileintegrity/actions/workflows/reportcard.yaml/badge.svg)
+![Local Go Report Card](https://github.com/aicirt2012/fileintegrity/actions/workflows/reportcard.yaml/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aicirt2012/fileintegrity)](https://goreportcard.com/report/github.com/aicirt2012/fileintegrity)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # File Integrity (FI)
