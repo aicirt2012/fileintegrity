@@ -2,6 +2,7 @@ name: Reportcard
 on: [push]
 jobs:
   reportcard:
+    name: Reportcard
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

@@ -19,7 +19,7 @@ jobs:
         go-version-file: go.mod
 
     - name: Install go-licenses
-      run: go env && go install github.com/google/go-licenses@latest && ls
+      run: go install github.com/google/go-licenses@latest
     - name: Generate License File
       run: | 
         rm doc/license/license.txt
