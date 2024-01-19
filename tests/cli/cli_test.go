@@ -81,8 +81,8 @@ func TestDuplicateFlow(t *testing.T) {
 	}, 3, 3)
 }
 
-func TestContainedFlow(t *testing.T) {
-	dir, files := common.CreateScenario("check-contained", common.Files{
+func TestContainsFlow(t *testing.T) {
+	dir, files := common.CreateScenario("check-contains", common.Files{
 		common.NewFile(`base\a.txt`, `2022-05-06T00:40:21+02:00`, `unique text1 `+common.StaticContent(101)),
 		common.NewFile(`base\b.txt`, `2022-05-06T00:40:21+02:00`, `contained text `+common.StaticContent(101)),
 		common.NewFile(`external\unique.txt`, `2022-05-06T00:40:21+02:00`, `unique text2 `+common.StaticContent(101)),
@@ -100,7 +100,7 @@ func TestContainedFlow(t *testing.T) {
 	})
 
 	// Execute without deletion
-	executeCli([]string{"check", "contained", baseDir, externalDir, "-q"})
+	executeCli([]string{"check", "contains", baseDir, externalDir, "-q"})
 
 	common.AssertFilesExist(t, dir, files)
 	common.AssertContainedLogFile(t, baseDir, []common.LogBlock{
@@ -115,8 +115,30 @@ func TestContainedFlow(t *testing.T) {
 	}, 2, 1, 2)
 
 	// Execute with deletion
-	executeCli([]string{"check", "contained", baseDir, externalDir, "-q", "--fix"})
+	executeCli([]string{"check", "contains", baseDir, externalDir, "-q", "--fix"})
 	common.AssertFilesExist(t, dir, files[:4])
+}
+
+func TestExtensionStatsFlow(t *testing.T) {
+	dir, files := common.CreateScenario("check-extension-stats", common.Files{})
+
+	common.CreateIntegrityFile(t, dir, []common.FileHash{
+		common.NewFileHash(`any`, `2022-05-06T00:40:21+02:00`, `2022-05-06T00:40:21+02:00`, `5000`, `any.jpg`),
+		common.NewFileHash(`any`, `2022-05-06T00:40:21+02:00`, `2022-05-06T00:40:21+02:00`, `2201`, `any.jpg`),
+		common.NewFileHash(`any`, `2022-05-06T00:40:21+02:00`, `2022-05-06T00:40:21+02:00`, `1999`, `any.png`),
+		common.NewFileHash(`any`, `2022-05-06T00:40:21+02:00`, `2022-05-06T00:40:21+02:00`, `799`, `any.txt`),
+		common.NewFileHash(`any`, `2022-05-06T00:40:21+02:00`, `2022-05-06T00:40:21+02:00`, `1`, `any`),
+	})
+
+	executeCli([]string{"check", "ext-stats", dir, "-q"})
+
+	common.AssertFilesExist(t, dir, files)
+	common.AssertExtensionStatsLogFile(t, dir, []string{
+		`72.010%  7.2 kB  *.jpg`,
+		`19.990%  2.0 kB  *.png`,
+		` 7.990%   799 B  *.txt`,
+		` 0.010%     1 B  *`,
+	})
 }
 
 func executeCli(args []string) string {

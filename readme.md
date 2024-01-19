@@ -42,13 +42,18 @@ $ fileintegrity check duplicates <dir>
 
 Checks if files of an external directory are contained within the integrity file. With the optional flag fix, contained and duplicated files are deleted form the external directory:
 ```bash
-$ fileintegrity check contained <dir> <externalDir> [--fix]
+$ fileintegrity check contains <dir> <externalDir> [--fix]
 ```
 _Note:_ Files are compared based on a computed SHA-256 hash. In theory, there might be collisions. However, in practice skipping the byte-by-byte comparison ia a huge performance advantage.
 
 Checks style issues related to the file system based on the integrity file. Check categories are: Directory hierarchy issues, path and directory length issues, naming issues.
 ```bash
 $ fileintegrity check style <dir>
+```
+
+Checks the file extension distribution statistics based on the integrity file.
+```bash
+$ fileintegrity check ext-stats <dir>
 ```
 
 ### Example Scenario

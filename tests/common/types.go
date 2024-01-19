@@ -62,7 +62,7 @@ func (l LogBlock) firstLine() string {
 
 func NewDuplicateLogBlock(hash string, relativePaths []string) LogBlock {
 	return LogBlock{
-		category:      ilog.Duplicate,
+		category:      ilog.Duplicates,
 		hash:          hash,
 		relativePaths: relativePaths,
 	}
@@ -70,7 +70,7 @@ func NewDuplicateLogBlock(hash string, relativePaths []string) LogBlock {
 
 func NewContainedLogBlock(hash string, relativePaths []string) LogBlock {
 	return LogBlock{
-		category:      ilog.Contained,
+		category:      ilog.Contains,
 		hash:          hash,
 		relativePaths: relativePaths,
 	}

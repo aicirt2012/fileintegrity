@@ -18,7 +18,7 @@ func (l *DuplicateLog) AddRelativePath(path string) {
 
 func (l DuplicateLog) serialize() string {
 	var b strings.Builder
-	b.WriteString(Duplicate.ToUpper() + " " + l.Hash + "\n")
+	b.WriteString(Duplicates.ToUpper() + " " + l.Hash + "\n")
 	b.WriteString(strings.Join(l.RelativePaths, "\n"))
 	b.WriteString("\n")
 	return b.String()
@@ -51,7 +51,7 @@ func (ds DuplicateSummary) bytePercentage() float64 {
 }
 
 func (ds DuplicateSummary) serialize() string {
-	s := title(Duplicate)
+	s := title(Duplicates)
 	s += line("Execution time:", "%.2f s", ds.ExecutionTime.Abs().Seconds())
 	s += line("Total files:", "%v", ds.TotalFiles)
 	s += line("Duplicate files:", "%v", ds.DuplicateFiles)

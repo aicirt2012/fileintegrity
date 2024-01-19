@@ -19,11 +19,12 @@ type serializable interface {
 type Category string
 
 const (
-	Upsert    Category = "upsert"
-	Verify    Category = "verify"
-	Duplicate Category = "duplicate"
-	Contained Category = "contained"
-	Style     Category = "style"
+	Upsert         Category = "upsert"
+	Verify         Category = "verify"
+	Duplicates     Category = "duplicates"
+	Contains       Category = "contains"
+	Style          Category = "style"
+	ExtensionStats Category = "extension stats"
 )
 
 func (c Category) ToUpper() string {

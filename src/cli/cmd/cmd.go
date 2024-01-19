@@ -58,8 +58,9 @@ func check() *cobra.Command {
 		Long:  `Check integrity directory regarding several aspects`,
 	}
 	cmd.AddCommand(checkDuplicates())
-	cmd.AddCommand(checkContained())
+	cmd.AddCommand(checkContains())
 	cmd.AddCommand(checkStyleIssue())
+	cmd.AddCommand(checkExtStats())
 	return cmd
 }
 
@@ -78,12 +79,12 @@ func checkDuplicates() *cobra.Command {
 	return cmd
 }
 
-func checkContained() *cobra.Command {
+func checkContains() *cobra.Command {
 	var quiet, fix bool
 	var cmd = &cobra.Command{
-		Use:   `contained <dir> <externalDir>`,
-		Short: `Check contained`,
-		Long:  `Check contained within integrity file`,
+		Use:   `contains <dir> <externalDir>`,
+		Short: `Check contains`,
+		Long:  `Check contains within integrity file`,
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			fileintegrity.CheckContained(args[0], args[1], fix, options(&quiet))
@@ -103,6 +104,21 @@ func checkStyleIssue() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			fileintegrity.CheckStyleIssues(args[0], options(&quiet))
+		},
+	}
+	addQuietFlag(cmd, &quiet)
+	return cmd
+}
+
+func checkExtStats() *cobra.Command {
+	var quiet bool
+	var cmd = &cobra.Command{
+		Use:   `ext-stats <dir>`,
+		Short: `Check ext-stats`,
+		Long:  `Check ext-stats within integrity file`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			fileintegrity.CheckExtensionStats(args[0], options(&quiet))
 		},
 	}
 	addQuietFlag(cmd, &quiet)

@@ -105,7 +105,7 @@ func AssertDuplicateLogFile(t *testing.T, dir string, blocks []LogBlock, unique 
 	currentLine, actualDuplicates, _ := AssertLogBlocks(t, lines, blocks)
 	assert.Equal(t, duplicates, actualDuplicates)
 
-	assert.Equal(t, "//// Duplicate Summary ///////////////////", lines[currentLine+2])
+	assert.Equal(t, "//// Duplicates Summary //////////////////", lines[currentLine+2])
 	assertSummaryLine(t, "Total files:", unique+duplicates, lines[currentLine+4])
 	assertSummaryLine(t, "Duplicate files:", duplicates, lines[currentLine+5])
 }
@@ -122,10 +122,25 @@ func AssertContainedLogFile(t *testing.T, dir string, blocks []LogBlock, unique 
 	assert.Equal(t, contained, aContained)
 	total := unique + duplicates + contained
 
-	assert.Equal(t, "//// Contained Summary ///////////////////", lines[currentLine+2])
+	assert.Equal(t, "//// Contains Summary ////////////////////", lines[currentLine+2])
 	assertSummaryLine(t, "Total files:", total, lines[currentLine+4])
 	assertSummaryLine(t, "Contained files:", contained, lines[currentLine+5])
 	assertSummaryLine(t, "Duplicate files:", duplicates, lines[currentLine+6])
+}
+
+func AssertExtensionStatsLogFile(t *testing.T, dir string, lines []string) {
+	content, err := lastLogFileContent(dir)
+	if err != nil {
+		log.Fatal("could not read log file", err)
+	}
+	currentLine := 0
+	actualLines := strings.Split(content, "\n")
+	for i, line := range lines {
+		currentLine++
+		assert.Equal(t, line, actualLines[i])
+	}
+
+	assert.Equal(t, "//// Extension Stats Summary /////////////", actualLines[currentLine+2])
 }
 
 func AssertLogBlocks(t *testing.T, lines []string, blocks []LogBlock) (int, int, int) {
@@ -140,9 +155,9 @@ func AssertLogBlocks(t *testing.T, lines []string, blocks []LogBlock) (int, int,
 			currentLine++
 		}
 		switch block.category {
-		case ilog.Duplicate:
+		case ilog.Duplicates:
 			duplicates += len(block.relativePaths) - 1
-		case ilog.Contained:
+		case ilog.Contains:
 			contained += len(block.relativePaths)
 		}
 		currentLine++

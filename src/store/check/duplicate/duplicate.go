@@ -12,7 +12,7 @@ import (
 func Check(basePath string, options store.Options) {
 	start := time.Now()
 	summary := ilog.DuplicateSummary{}
-	logBuffer := ilog.NewAutomaticLogBuffer(basePath, ilog.Duplicate, 10000, options.Log)
+	logBuffer := ilog.NewAutomaticLogBuffer(basePath, ilog.Duplicates, 10000, options.Log)
 
 	m, tf, tb := CalcHashSizeMap(file.LoadContent(basePath))
 	summary.TotalFiles = tf

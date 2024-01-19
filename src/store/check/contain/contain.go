@@ -1,4 +1,4 @@
-package contained
+package contain
 
 import (
 	"log"
@@ -16,7 +16,7 @@ import (
 func Check(basePath string, externalPath string, fix bool, options store.Options) {
 	start := time.Now()
 	summary := ilog.ContainedSummary{}
-	logBuffer := ilog.NewAutomaticLogBuffer(basePath, ilog.Contained, 10000, options.Log)
+	logBuffer := ilog.NewAutomaticLogBuffer(basePath, ilog.Contains, 10000, options.Log)
 
 	options.Backup = true
 	err := store.Upsert(externalPath, options)

@@ -18,7 +18,7 @@ func (l *ContainedLog) AddRelativePath(path string) {
 
 func (l ContainedLog) serialize() string {
 	var b strings.Builder
-	b.WriteString(Contained.ToUpper() + " " + l.Hash + "\n")
+	b.WriteString(Contains.ToUpper() + " " + l.Hash + "\n")
 	b.WriteString(strings.Join(l.RelativePaths, "\n"))
 	b.WriteString("\n")
 	return b.String()
@@ -61,7 +61,7 @@ func (ds ContainedSummary) overheadBytePercentage() float64 {
 }
 
 func (ds ContainedSummary) serialize() string {
-	s := title(Contained)
+	s := title(Contains)
 	s += line("Execution time:", "%.2f s", ds.ExecutionTime.Abs().Seconds())
 	s += line("Total files:", "%v", ds.TotalFiles)
 	s += line("Contained files:", "%v", ds.ContainedFiles)

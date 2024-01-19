@@ -37,6 +37,11 @@ func CheckStyleIssues(path string, options Options) {
 	check.StyleIssues(path, options.toStoreOptions())
 }
 
+// CheckExtensionStats checks the distribution of file extensions based on the file size within the integrity file
+func CheckExtensionStats(path string, options Options) {
+	check.ExtensionStats(path, options.toStoreOptions())
+}
+
 // DefaultOptions for execution
 func DefaultOptions() Options {
 	return Options{
